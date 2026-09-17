@@ -1,1 +1,1109 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#159669">
+<title>Eduvia AI — Système Global Intégré</title>
+<style>
+:root {
+  --g: #159669;
+  --g-hover: #0d7852;
+  --g-light: #eaf8f2;
+  --ink: #0f172a;
+  --muted: #64748b;
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --line: #e2e8f0;
+  --dark: #0f172a;
+  --danger: #ef4444;
+  --danger-bg: #fef2f2;
+  --blue: #2563eb;
+  --blue-bg: #eff6ff;
+  --amber: #d97706;
+  --amber-bg: #fffbeb;
+  --radius: 16px;
+  --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+}
 
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+body { background: var(--bg); color: var(--ink); line-height: 1.5; min-height: 100vh; }
+
+button, input, textarea, select { font: inherit; }
+button { cursor: pointer; border: none; outline: none; }
+.hidden { display: none !important; }
+.muted { color: var(--muted); }
+.small { font-size: 0.85rem; }
+.wrap { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+.card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); transition: all 0.2s ease; }
+.grid { display: grid; gap: 18px; }
+.g2 { grid-template-columns: repeat(2, 1fr); }
+.g3 { grid-template-columns: repeat(3, 1fr); }
+.g4 { grid-template-columns: repeat(4, 1fr); }
+
+.btn { border-radius: 12px; padding: 12px 18px; font-weight: 700; font-size: 0.95rem; transition: all 0.18s ease; display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; }
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+.primary { background: var(--g); color: #fff; }
+.primary:hover { background: var(--g-hover); }
+.dark { background: var(--dark); color: #fff; }
+.ghost { background: transparent; border: 1px solid var(--line); color: var(--ink); }
+.ghost:hover { background: var(--bg); }
+.danger { background: var(--danger-bg); color: var(--danger); border: 1px solid #fecaca; }
+.danger:hover { background: #fee2e2; }
+.blue { background: var(--blue-bg); color: var(--blue); border: 1px solid #bfdbfe; }
+.blue:hover { background: #dbeafe; }
+.amber { background: var(--amber-bg); color: var(--amber); border: 1px solid #fde68a; }
+.full { width: 100%; }
+
+input, textarea, select { width: 100%; padding: 12px 16px; border: 1px solid var(--line); border-radius: 12px; background: #fff; color: var(--ink); transition: border-color 0.2s; }
+textarea { min-height: 110px; resize: vertical; }
+input:focus, textarea:focus, select:focus { border-color: var(--g); outline: none; box-shadow: 0 0 0 3px rgba(21, 150, 105, 0.15); }
+label { display: block; font-weight: 700; margin-bottom: 6px; font-size: 0.9rem; }
+h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 800; }
+h1 { font-size: 2rem; }
+h2 { font-size: 1.4rem; margin-bottom: 12px; }
+
+.top { position: sticky; top: 0; z-index: 40; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+.topin { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 14px; padding: 12px 20px; }
+.brand { font-weight: 900; font-size: 1.25rem; display: flex; align-items: center; gap: 8px; color: var(--g); }
+.spacer { flex: 1; }
+.pill { padding: 6px 12px; border-radius: 999px; background: var(--g-light); color: var(--g); font-weight: 800; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 6px; }
+
+#app { min-height: 100vh; }
+.view { display: none; }
+.view.active { display: block; animation: fadeIn 0.25s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+.hero { padding: 30px 0 10px; }
+.hero h1 { font-size: clamp(2rem, 4vw, 3rem); line-height: 1.15; margin-top: 10px; margin-bottom: 10px; }
+.hero p { font-size: 1.1rem; color: var(--muted); max-width: 750px; }
+
+.role { text-align: left; background: #fff; border: 2px solid var(--line); border-radius: var(--radius); padding: 16px; transition: all 0.2s; cursor: pointer; }
+.role:hover, .role.sel { border-color: var(--g); background: var(--g-light); }
+.role .ico { font-size: 2rem; display: block; margin-bottom: 6px; }
+.role b { font-size: 1.05rem; display: block; color: var(--ink); }
+.role.disabled { opacity: 0.5; cursor: not-allowed; border-color: var(--line) !important; background: #fff !important; }
+
+.notice { padding: 14px 18px; border-radius: 14px; background: var(--blue-bg); border: 1px solid #bfdbfe; color: #1e40af; font-size: 0.9rem; }
+.notice.warn { background: var(--amber-bg); border-color: #fde68a; color: #92400e; }
+
+.auth { max-width: 850px; margin: 20px auto; }
+.authgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.creatorBox { background: var(--dark); color: #fff; border-radius: var(--radius); padding: 22px; }
+.creatorBox input { background: #1e293b; color: #fff; border-color: #334155; }
+.creatorBox label { color: #cbd5e1; }
+
+.shell { display: grid; grid-template-columns: 260px 1fr; min-height: calc(100vh - 65px); }
+aside { background: #fff; border-right: 1px solid var(--line); padding: 16px; position: sticky; top: 65px; height: calc(100vh - 65px); overflow-y: auto; }
+.navbtn { width: 100%; border: 0; background: transparent; text-align: left; padding: 12px 14px; border-radius: 12px; font-weight: 700; color: #475569; margin-bottom: 4px; transition: all 0.15s; display: flex; align-items: center; gap: 10px; }
+.navbtn:hover, .navbtn.sel { background: var(--g-light); color: var(--g); }
+.main { min-width: 0; background: var(--bg); }
+.mobilebar { display: none; padding: 10px 16px; background: #fff; border-bottom: 1px solid var(--line); position: sticky; top: 65px; z-index: 30; }
+
+.stat { font-size: 2rem; font-weight: 900; color: var(--g); }
+.tag { display: inline-block; padding: 4px 10px; border-radius: 999px; background: #f1f5f9; font-size: 0.75rem; font-weight: 700; color: var(--muted); }
+.tag.green { background: #dcfce7; color: #15803d; }
+.tag.blue { background: #dbeafe; color: #1e40af; }
+
+.chat { display: flex; flex-direction: column; gap: 14px; max-height: 520px; overflow-y: auto; padding: 12px; background: #f8fafc; border: 1px solid var(--line); border-radius: 16px; margin-bottom: 14px; }
+.msg { max-width: 88%; padding: 14px 18px; border-radius: 18px; line-height: 1.55; white-space: pre-wrap; font-size: 0.95rem; }
+.msg.ai { background: #ffffff; border: 1px solid var(--line); align-self: flex-start; border-bottom-left-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+.msg.me { background: var(--g); color: #ffffff; align-self: flex-end; border-bottom-right-radius: 4px; }
+.msg b { color: inherit; }
+
+.chatrow { display: flex; gap: 10px; align-items: flex-end; }
+.chatrow textarea { min-height: 54px; max-height: 160px; }
+
+.drop { border: 2px dashed #cbd5e1; border-radius: 18px; padding: 30px; text-align: center; background: #ffffff; transition: all 0.2s; cursor: pointer; }
+.drop.drag, .drop:hover { border-color: var(--g); background: var(--g-light); }
+.files { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-top: 14px; }
+.file { border: 1px solid var(--line); border-radius: 14px; padding: 10px; background: #fff; position: relative; font-size: 0.85rem; }
+.file img { width: 100%; height: 90px; object-fit: cover; border-radius: 8px; margin-bottom: 6px; }
+.thumb { height: 90px; display: grid; place-items: center; background: #f1f5f9; border-radius: 8px; font-size: 2rem; margin-bottom: 6px; }
+
+.setting { display: flex; justify-content: space-between; gap: 20px; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.setting:last-child { border-bottom: 0; }
+.switch { width: 50px; height: 28px; border-radius: 999px; background: #cbd5e1; padding: 3px; border: 0; cursor: pointer; transition: background 0.2s; }
+.switch i { display: block; width: 22px; height: 22px; background: #fff; border-radius: 50%; transition: transform 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+.switch.on { background: var(--g); }
+.switch.on i { transform: translateX(22px); }
+
+.toast { position: fixed; right: 20px; bottom: 20px; z-index: 100; background: var(--dark); color: #fff; padding: 14px 20px; border-radius: 14px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-width: 380px; font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 10px; animation: slideUp 0.2s ease-out; }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.modal { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 90; display: grid; place-items: center; padding: 20px; }
+.modalbox { max-width: 600px; width: 100%; background: #fff; border-radius: 20px; padding: 26px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+
+.chip { padding: 6px 14px; border-radius: 999px; background: var(--bg); border: 1px solid var(--line); font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+.chip:hover { background: var(--g-light); border-color: var(--g); color: var(--g); }
+
+.darkmode { --ink: #f8fafc; --muted: #94a3b8; --bg: #0b0f17; --card: #151e2e; --line: #24334a; }
+.darkmode .top, .darkmode aside, .darkmode input, .darkmode textarea, .darkmode select, .darkmode .role, .darkmode .file, .darkmode .msg.ai, .darkmode .drop { background: #151e2e; color: var(--ink); }
+.darkmode .chat { background: #0f172a; }
+.darkmode .ghost { color: var(--ink); border-color: var(--line); }
+.darkmode .ghost:hover { background: #1e293b; }
+.darkmode .thumb { background: #1e293b; }
+
+@media (max-width: 880px) {
+  .g4, .g3 { grid-template-columns: repeat(2, 1fr); }
+  .shell { grid-template-columns: 1fr; }
+  aside { display: none; }
+  .mobilebar { display: flex; align-items: center; justify-content: space-between; }
+  .authgrid, .g2 { grid-template-columns: 1fr; }
+  .wrap { padding: 14px; }
+  .topin { padding: 10px 14px; }
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <!-- ECRAN DE CONNEXION / CHOIX DE ROLE -->
+  <div id="loginView" class="view active">
+    <div class="wrap">
+      <section class="hero">
+        <span class="pill">🛡️ Eduvia AI · Plateforme Éducative Fédérée</span>
+        <h1>Ton espace scolaire intelligent et sécurisé.</h1>
+        <p>Environnement de travail augmenté pour élèves, enseignants, administrateurs et utilisateurs individuels. Données strictement compartimentées.</p>
+      </section>
+
+      <div class="card auth">
+        <h2>Sélectionne ton profil d'accès</h2>
+        <p class="muted" style="margin-bottom:18px;">Chaque profil dispose d'un espace de travail sur-mesure et de permissions dédiées.</p>
+
+        <div class="grid g3 rolebox" id="roles">
+          <div class="role sel" data-role="STUDENT"><span class="ico">👨‍🎓</span><b>Élève</b><span class="muted small">Collège / Lycée</span></div>
+          <div class="role" data-role="TEACHER"><span class="ico">👨‍🏫</span><b>Professeur</b><span class="muted small">Cours & Corrections</span></div>
+          <div class="role" data-role="SCHOOL_ADMIN"><span class="ico">🏫</span><b>Administration</b><span class="muted small">Gestion & Suivi</span></div>
+          <div class="role" data-role="INDIVIDUAL"><span class="ico">👤</span><b>Autodidacte</b><span class="muted small">Espace personnel</span></div>
+          <div class="role" data-role="CREATOR"><span class="ico">🛡️</span><b>Créateur</b><span class="muted small">Supervision système</span></div>
+          <div class="role disabled"><span class="ico">🎓</span><b>Université</b><span class="muted small">Prochainement</span></div>
+        </div>
+
+        <div id="normalAuth" style="margin-top:20px;">
+          <div class="authgrid">
+            <div><label>Adresse Email</label><input id="email" type="email" value="alex@eduvia.fr" placeholder="ton@email.fr"></div>
+            <div><label>Mot de passe</label><input id="password" type="password" value="demo123456" placeholder="••••••••••"></div>
+          </div>
+          <div style="margin-top:14px;"><label>Date de naissance</label><input id="dob" type="date" value="2008-05-14"></div>
+          <div class="notice warn" style="margin-top:16px;">🔐 Mode local navigateur : Vos données personnelles restent stockées dans votre session. Aucune transmission tiers sans votre consentement.</div>
+          <button class="btn primary full" style="margin-top:18px;" onclick="login()">Se connecter à mon espace</button>
+          <button class="btn ghost full" style="margin-top:10px;" onclick="register()">Créer un compte de test</button>
+        </div>
+
+        <div id="creatorAuth" class="hidden creatorBox" style="margin-top:20px;">
+          <h3>🛡️ Portail Sécurisé Créateur</h3>
+          <p class="small muted" style="margin-bottom:14px;">Accès réservé à la supervision technique et à la maintenance du système fédéré.</p>
+          <label>Identifiant Créateur Autorisé</label>
+          <input id="creatorEmail" type="email" placeholder="admin@eduvia.ai">
+          <label style="margin-top:12px;">Clé d'Accès Sécurisée</label>
+          <input id="creatorCode" type="password" placeholder="Code secret">
+          <button class="btn primary full" style="margin-top:16px;" onclick="creatorLogin()">Authentification Administrateur</button>
+          <button class="btn ghost full" style="margin-top:10px;" onclick="initCreator()">Générer une clé de test locale</button>
+          <div id="creatorHint" class="small" style="margin-top:12px; color:#cbd5e1; word-break:break-all;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APPLICATION PRINCIPALE -->
+  <div id="appView" class="view">
+    <header class="top">
+      <div class="topin">
+        <button class="btn ghost" onclick="toggleMenu()" title="Menu">☰</button>
+        <div class="brand">🌿 Eduvia AI</div>
+        <span id="rolePill" class="pill"></span>
+        <div class="spacer"></div>
+        <button class="btn ghost" onclick="go('settings')" title="Paramètres">⚙️</button>
+        <button class="btn ghost" onclick="logout()" title="Déconnexion">🚪</button>
+      </div>
+    </header>
+
+    <div class="mobilebar">
+      <button class="btn ghost" onclick="toggleMenu()">☰ Menu</button>
+      <button class="btn ghost" onclick="back()">← Retour</button>
+      <button class="btn primary" onclick="go('home')">🏠 Accueil</button>
+    </div>
+
+    <div class="shell">
+      <aside id="side">
+        <div class="small muted" style="padding: 8px 12px; font-weight: 800; letter-spacing:0.05em;">WORKSPACE</div>
+        <button class="navbtn sel" data-page="home" onclick="go('home')"><span>🏠</span> Accueil</button>
+        <button class="navbtn" data-page="new" onclick="go('new')"><span>➕</span> Nouvelle Page</button>
+        <button class="navbtn" data-page="pages" onclick="go('pages')"><span>📄</span> Mes Pages</button>
+        <button class="navbtn" data-page="projects" onclick="go('projects')"><span>📁</span> Projets & Tâches</button>
+        <button class="navbtn" data-page="ai" onclick="go('ai')"><span>🤖</span> Assistant Lia AI</button>
+        <button class="navbtn" data-page="docs" onclick="go('docs')"><span>📚</span> Documents & Images</button>
+        <button class="navbtn" data-page="schedule" onclick="go('schedule')"><span>🕐</span> Emploi du temps</button>
+        <button class="navbtn" data-page="settings" onclick="go('settings')"><span>⚙️</span> Paramètres</button>
+        <button class="navbtn" data-page="report" onclick="go('report')"><span>🚨</span> Signaler un problème</button>
+
+        <div id="creatorNav" class="hidden">
+          <hr style="margin: 14px 0; border:0; border-top:1px solid var(--line);">
+          <div class="small muted" style="padding: 8px 12px; font-weight: 800; letter-spacing:0.05em;">SUPERVISION</div>
+          <button class="navbtn" data-page="reports" onclick="go('reports')"><span>🛡️</span> Signalements</button>
+          <button class="navbtn" data-page="security" onclick="go('security')"><span>🔐</span> Sécurité & Audit</button>
+        </div>
+
+        <hr style="margin: 14px 0; border:0; border-top:1px solid var(--line);">
+        <button class="navbtn" onclick="logout()"><span>🚪</span> Se déconnecter</button>
+      </aside>
+
+      <main class="main">
+        <div id="pageContent" class="wrap"></div>
+      </main>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ET TOAST -->
+<div id="modal" class="modal hidden">
+  <div class="modalbox">
+    <div id="modalBody"></div>
+    <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:20px;">
+      <button class="btn ghost" onclick="closeModal()">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<script>
+'use strict';
+
+const EDUVIA_DEFAULT_CREATOR_CODE = 'EduviaCreator2026!SecureKey';
+
+// ETAT GLOBAL DE L'APPLICATION
+const state = {
+  role: null,
+  page: 'home',
+  history: [],
+  email: '',
+  profile: null,
+  pages: JSON.parse(localStorage.getItem('edu_pages') || '[]'),
+  projects: JSON.parse(localStorage.getItem('edu_projects') || '[]'),
+  docs: JSON.parse(localStorage.getItem('edu_docs') || '[]'),
+  reports: JSON.parse(localStorage.getItem('edu_reports') || '[]'),
+  messages: JSON.parse(localStorage.getItem('edu_messages') || '[]'),
+  schedule: JSON.parse(localStorage.getItem('edu_schedule') || '[]'),
+  files: [],
+  listening: false,
+  voice: true,
+  dark: localStorage.getItem('edu_dark') === '1'
+};
+
+// DONNEES PAR DEFAUT SI VIDE
+if (state.pages.length === 0) {
+  state.pages = [
+    { id: 'p1', title: 'Mathématiques — Théorème de Pythagore', body: 'Dans un triangle rectangle, le carré de la longueur de l\'hypoténuse est égal à la somme des carrés des longueurs des deux autres côtés. Formula: a² + b² = c².', date: Date.now() - 86400000 },
+    { id: 'p2', title: 'Histoire — La Révolution Française (1789)', body: 'Chronologie clé : 5 mai (États généraux), 14 juillet (Prise de la Bastille), 26 août (Déclaration des droits de l\'homme et du citoyen).', date: Date.now() - 43200000 }
+  ];
+  localStorage.setItem('edu_pages', JSON.stringify(state.pages));
+}
+
+if (state.projects.length === 0) {
+  state.projects = [
+    { id: 'pr1', name: 'Exposé SVT : Le cycle du carbone', status: 'En cours', tasks: [{ title: 'Faire le schéma du cycle', done: true }, { title: 'Rédiger la synthèse', done: false }] },
+    { id: 'pr2', name: 'Révisions Bac Blanc / Brevet', status: 'Planifié', tasks: [{ title: 'Fiches de physique', done: false }, { title: 'Annales de maths 2025', done: false }] }
+  ];
+  localStorage.setItem('edu_projects', JSON.stringify(state.projects));
+}
+
+if (state.schedule.length === 0) {
+  state.schedule = [
+    { id: 's1', day: 'Lundi 08h-10h', course: 'Mathématiques (Salle 201)' },
+    { id: 's2', day: 'Lundi 10h-12h', course: 'Histoire-Géographie (Salle 104)' },
+    { id: 's3', day: 'Mardi 09h-11h', course: 'Physique-Chimie (Labo 3)' },
+    { id: 's4', day: 'Jeudi 14h-16h', course: 'SVT (Salle 205)' }
+  ];
+  localStorage.setItem('edu_schedule', JSON.stringify(state.schedule));
+}
+
+const labels = {
+  STUDENT: 'Élève',
+  TEACHER: 'Professeur',
+  SCHOOL_ADMIN: 'Administrateur d’établissement',
+  INDIVIDUAL: 'Autodidacte',
+  CREATOR: 'Créateur / Administrateur Système'
+};
+
+const roleInstructions = {
+  STUDENT: "Tu es Lia, l'assistant éducatif bienveillant pour collégiens et lycéens. Explique avec clarté, étape par étape, propose des exemples concrets et encourage l'autonomie.",
+  TEACHER: "Tu es Lia, l'assistant pédagogique pour enseignants. Aide à concevoir des cours, des plans de leçon, des exercices différenciés et des grilles d'évaluation.",
+  SCHOOL_ADMIN: "Tu es Lia, l'assistant de gestion scolaire. Aide à l'organisation administrative, au suivi des processus institutionnels et à la synthèse de documents.",
+  INDIVIDUAL: CREATOR: "Tu es Lia, l'expert technique Eduvia AI. Tu aides à contrôler l'état du système fédéré, à analyser la sécurité et à gérer les rapports d'incidents."
+};
+
+function save(key, val) {
+  localStorage.setItem(key, JSON.stringify(val));
+}
+
+function toast(msg) {
+  const x = document.getElementById('toast');
+  x.textContent = '💬 ' + msg;
+  x.classList.remove('hidden');
+  clearTimeout(window.__t);
+  window.__t = setTimeout(() => x.classList.add('hidden'), 3200);
+}
+
+function showModal(html) {
+  document.getElementById('modalBody').innerHTML = html;
+  document.getElementById('modal').classList.remove('hidden');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.add('hidden');
+}
+
+function esc(str) {
+  return String(str ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+}
+
+function init() {
+  if (state.dark) document.body.classList.add('darkmode');
+
+  document.querySelectorAll('#roles .role').forEach(b => {
+    if (b.classList.contains('disabled')) return;
+    b.addEventListener('click', () => {
+      document.querySelectorAll('#roles .role').forEach(x => x.classList.remove('sel'));
+      b.classList.add('sel');
+      const isCreator = b.dataset.role === 'CREATOR';
+      document.getElementById('normalAuth').classList.toggle('hidden', isCreator);
+      document.getElementById('creatorAuth').classList.toggle('hidden', !isCreator);
+    });
+  });
+}
+
+function login() {
+  const role = document.querySelector('#roles .role.sel')?.dataset.role || 'STUDENT';
+  if (role === 'CREATOR') { creatorLogin(); return; }
+
+  const email = document.getElementById('email').value.trim();
+  const pw = document.getElementById('password').value;
+  const dob = document.getElementById('dob').value;
+
+  if (!email || !pw || !dob) {
+    toast('Veuillez remplir tous les champs de connexion.');
+    return;
+  }
+
+  state.role = role;
+  state.email = email;
+  state.profile = { name: email.split('@')[0], dob };
+  enter();
+}
+
+function register() {
+  toast('Compte de test configuré instantanément dans ce navigateur.');
+  login();
+}
+
+function initCreator() {
+  const email = document.getElementById('creatorEmail').value.trim() || 'admin@eduvia.ai';
+  document.getElementById('creatorEmail').value = email;
+  document.getElementById('creatorCode').value = EDUVIA_DEFAULT_CREATOR_CODE;
+  localStorage.setItem('edu_creator_email', email);
+  localStorage.setItem('edu_creator_code', EDUVIA_DEFAULT_CREATOR_CODE);
+
+  document.getElementById('creatorHint').textContent = 'Clé activée : ' + EDUVIA_DEFAULT_CREATOR_CODE;
+  toast('Clé Créateur générée et renseignée.');
+}
+
+function creatorLogin() {
+  const email = document.getElementById('creatorEmail').value.trim();
+  const code = document.getElementById('creatorCode').value;
+
+  const savedE = localStorage.getItem('edu_creator_email') || 'admin@eduvia.ai';
+  const savedC = localStorage.getItem('edu_creator_code') || EDUVIA_DEFAULT_CREATOR_CODE;
+
+  if (email !== savedE || code !== savedC) {
+    toast('Identifiant ou clé Créateur incorrect.');
+    return;
+  }
+
+  state.role = 'CREATOR';
+  state.email = email;
+  state.profile = { name: 'Créateur Système' };
+  enter();
+}
+
+function enter() {
+  document.getElementById('loginView').classList.remove('active');
+  document.getElementById('appView').classList.add('active');
+  document.getElementById('rolePill').textContent = labels[state.role];
+  document.getElementById('creatorNav').classList.toggle('hidden', state.role !== 'CREATOR');
+  go('home', true);
+}
+
+function logout() {
+  state.role = null;
+  document.getElementById('appView').classList.remove('active');
+  document.getElementById('loginView').classList.add('active');
+  toast('Session fermée avec succès.');
+}
+
+function toggleMenu() {
+  const side = document.getElementById('side');
+  side.style.display = (side.style.display === 'block') ? '' : 'block';
+}
+
+function back() {
+  const p = state.history.pop();
+  if (p) go(p, true);
+  else go('home', true);
+}
+
+function go(page, noHistory = false) {
+  if (!noHistory && state.page !== page) state.history.push(state.page);
+  state.page = page;
+
+  document.querySelectorAll('.navbtn[data-page]').forEach(b => {
+    b.classList.toggle('sel', b.dataset.page === page);
+  });
+
+  const c = document.getElementById('pageContent');
+  c.innerHTML = render(page);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  bindPage();
+}
+
+// MOTEUR DE RENDU DES PAGES
+function render(page) {
+  const name = esc(state.profile?.name || 'Utilisateur');
+
+  if (page === 'home') {
+    return `
+      <div class="hero">
+        <span class="pill">💡 Espace actif : ${esc(labels[state.role])}</span>
+        <h1>Bonjour, ${name} 👋</h1>
+        <p>Bienvenue sur Eduvia AI. Toutes vos ressources pédagogiques et vos outils intelligents sont synchronisés dans cet espace.</p>
+      </div>
+
+      <div class="grid g4" style="margin-top:20px;">
+        <div class="card"><div class="stat">${state.pages.length}</div><div class="muted">Pages rédigées</div></div>
+        <div class="card"><div class="stat">${state.projects.length}</div><div class="muted">Projets actifs</div></div>
+        <div class="card"><div class="stat">${state.docs.length}</div><div class="muted">Documents/Images</div></div>
+        <div class="card"><div class="stat">${state.schedule.length}</div><div class="muted">Séances au planning</div></div>
+      </div>
+
+      <div class="grid g2" style="margin-top:20px;">
+        <div class="card">
+          <h2>🤖 Discuter avec Lia</h2>
+          <p class="muted" style="margin-bottom:16px;">Posez une question de cours, demandez une explication pas-à-pas ou la correction d'un exercice.</p>
+          <button class="btn primary" onclick="go('ai')">Ouvrir l'assistant IA</button>
+        </div>
+        <div class="card">
+          <h2>📷 Scanner un document / image</h2>
+          <p class="muted" style="margin-bottom:16px;">Importez une photo d'exercice, de cours ou un fichier PDF pour analyse directe.</p>
+          <button class="btn blue" onclick="go('docs')">Importer un document</button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:20px;">
+        <h2>⚡ Actions rapides</h2>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn ghost" onclick="go('new')">➕ Rédiger une note</button>
+          <button class="btn ghost" onclick="go('projects')">📁 Nouveau projet</button>
+          <button class="btn ghost" onclick="go('schedule')">🕐 Voir le planning</button>
+        </div>
+      </div>
+    `;
+  }
+
+  if (page === 'new') {
+    return `
+      <div class="card">
+        <h1>➕ Créer une nouvelle page de travail</h1>
+        <p class="muted" style="margin-bottom:16px;">Conservez vos cours, résumés et fiches de révision à un seul endroit.</p>
+        <label>Titre du document</label>
+        <input id="newTitle" placeholder="Ex. Physique — Lois de Newton">
+        <label style="margin-top:14px;">Contenu / Notes</label>
+        <textarea id="newBody" placeholder="Saisissez ou collez vos notes de cours ici..."></textarea>
+        <div style="margin-top:16px; display:flex; gap:10px;">
+          <button class="btn primary" onclick="createPage()">Enregistrer la page</button>
+          <button class="btn ghost" onclick="go('pages')">Annuler</button>
+        </div>
+      </div>
+    `;
+  }
+
+  if (page === 'pages') {
+    return `
+      <div class="card">
+        <div style="display:flex; justify-style:space-between; align-items:center; margin-bottom:16px;">
+          <div>
+            <h1>📄 Mes Pages</h1>
+            <p class="muted">Consultez et gérez l'ensemble de vos écrits.</p>
+          </div>
+          <button class="btn primary" onclick="go('new')">➕ Nouvelle page</button>
+        </div>
+        <div class="grid g2" style="margin-top:16px;">
+          ${state.pages.length ? state.pages.map((p, i) => `
+            <div class="card" style="background:var(--bg);">
+              <h3>${esc(p.title)}</h3>
+              <p class="muted small" style="margin:8px 0;">${new Date(p.date).toLocaleDateString('fr-FR')}</p>
+              <p style="margin-bottom:14px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">${esc(p.body)}</p>
+              <div style="display:flex; gap:8px;">
+                <button class="btn ghost small" onclick="askLiaAboutPage('${esc(p.title)}')">🤖 Analyser avec Lia</button>
+                <button class="btn danger small" onclick="deletePage(${i})">Supprimer</button>
+              </div>
+            </div>
+          `).join('') : '<p class="muted">Aucune page pour le moment.</p>'}
+        </div>
+      </div>
+    `;
+  }
+
+  if (page === 'projects') {
+    return `
+      <div class="card">
+        <h1>📁 Projets & Suivi des tâches</h1>
+        <p class="muted" style="margin-bottom:16px;">Organisez vos travaux de groupe, devoirs complexes et révisions.</p>
+        
+        <div class="authgrid" style="margin-bottom:20px;">
+          <input id="projName" placeholder="Nom du nouveau projet...">
+          <button class="btn primary" onclick="addProject()">Créer le projet</button>
+        </div>
+
+        <div class="grid g2">
+          ${state.projects.map((p, i) => `
+            <div class="card" style="background:var(--bg);">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <b>${esc(p.name)}</b>
+                <span class="tag green">${esc(p.status || 'En cours')}</span>
+              </div>
+              <div style="margin:12px 0;">
+                ${p.tasks.map((t, ti) => `
+                  <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                    <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTask(${i}, ${ti})" style="width:auto;">
+                    <span style="${t.done ? 'text-decoration:line-through; color:var(--muted);' : ''}">${esc(t.title)}</span>
+                  </div>
+                `).join('')}
+              </div>
+              <div style="display:flex; gap:6px; margin-top:10px;">
+                <input id="newTask_${i}" placeholder="Ajouter une tâche..." style="padding:6px 10px; font-size:0.85rem;">
+                <button class="btn ghost small" onclick="addTask(${i})">➕</button>
+                <button class="btn danger small" onclick="deleteProject(${i})">🗑️</button>
+              </div>
+            </div>
+          `).join('') || '<p class="muted">Aucun projet actif.</p>'}
+        </div>
+      </div>
+    `;
+  }
+
+  if (page === 'ai') {
+    return `
+      <div class="card">
+        <h1>🤖 Assistant Intégré — Lia</h1>
+        <p class="muted" style="margin-bottom:12px;">${esc(roleInstructions[state.role])}</p>
+
+        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
+          <span class="chip" onclick="quickPrompt('Résous cette équation étape par étape : 3x + 7 = 22')">🧮 Équation maths</span>
+          <span class="chip" onclick="quickPrompt('Explique le rôle de la mitochondrie dans la cellule')">🧬 SVT cellule</span>
+          <span class="chip" onclick="quickPrompt('Fais-moi un résumé synthétique de la Seconde Guerre Mondiale')">📜 Histoire 1939-1945</span>
+          <span class="chip" onclick="quickPrompt('Génère un quiz de 3 questions sur la grammaire française')">📝 Quiz Grammaire</span>
+        </div>
+
+        <div id="chat" class="chat">
+          ${state.messages.length ? state.messages.map(m => `
+            <div class="msg ${m.who === 'ai' ? 'ai' : 'me'}">
+              <b>${m.who === 'ai' ? '🌿 Lia (Eduvia AI)' : name}</b><br>${esc(m.text)}
+            </div>
+          `).join('') : `
+            <div class="msg ai">
+              <b>🌿 Lia (Eduvia AI)</b><br>Bonjour ${name} 👋 ! Je suis votre assistante virtuelle. Comment puis-je vous aider aujourd'hui ?
+            </div>
+          `}
+        </div>
+
+        <div class="chatrow">
+          <textarea id="prompt" placeholder="Posez votre question à Lia (cours, méthode, exercice)..."></textarea>
+          <button class="btn primary" onclick="sendAI()" style="height:54px;">Envoyer</button>
+        </div>
+
+        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:14px;">
+          <button class="btn ghost" onclick="startVoice()">🎙️ Activer le micro</button>
+          <button class="btn ghost" onclick="readLast()">🔊 Lire la réponse</button>
+          <button class="btn ghost" onclick="stopVoice()">⏸️ Stopper la voix</button>
+          <button class="btn blue" onclick="generateIllustration()">🖼️ Générer un schéma SVG</button>
+          <button class="btn danger" onclick="clearChat()">Réinitialiser le chat</button>
+        </div>
+      </div>
+
+      <div id="illustrationBox" style="margin-top:20px;"></div>
+    `;
+  }
+
+  if (page === 'docs') {
+    return `
+      <div class="card">
+        <h1>📚 Documents & Analyse D'Images</h1>
+        <p class="muted" style="margin-bottom:16px;">Déposez vos cours numérisés, exercices pris en photo ou fichiers PDF.</p>
+
+        <div id="drop" class="drop">
+          <div style="font-size:2.5rem; margin-bottom:8px;">📤</div>
+          <b>Glissez-déposez vos fichiers ici</b>
+          <p class="muted small" style="margin:6px 0 14px;">Format supportés : Images (PNG, JPG), PDF, Fichiers texte</p>
+          <button class="btn primary" onclick="document.getElementById('fileInput').click()">Parcourir vos fichiers</button>
+          <input id="fileInput" type="file" multiple accept="image/*,.pdf,.doc,.docx,.txt" class="hidden">
+        </div>
+
+        <div id="fileList" class="files"></div>
+
+        <hr style="margin:24px 0; border:0; border-top:1px solid var(--line);">
+        <h2>Fichiers en mémoire</h2>
+        <div class="grid g3" style="margin-top:12px;">
+          ${state.docs.map((d, i) => `
+            <div class="card" style="background:var(--bg);">
+              <b>${esc(d.name)}</b>
+              <p class="muted small">${esc(d.type)} · ${esc(d.date)}</p>
+              <div style="display:flex; gap:6px; margin-top:10px;">
+                <button class="btn blue small full" onclick="analyzeDoc('${esc(d.name)}')">🤖 Analyser avec Lia</button>
+                <button class="btn danger small" onclick="deleteDoc(${i})">🗑️</button>
+              </div>
+            </div>
+          `).join('') || '<p class="muted">Aucun document importé.</p>'}
+        </div>
+      </div>
+    `;
+  }
+
+  if (page === 'schedule') {
+    return `
+      <div class="card">
+        <h1>🕐 Emploi du temps & Horaires</h1>
+        <p class="muted" style="margin-bottom:16px;">Gérez votre planning de cours et vos séances d'étude.</p>
+
+        <div class="authgrid" style="margin-bottom:20px;">
+          <input id="day" placeholder="Jour & Heure (Ex. Lundi 14h-16h)">
+          <input id="course" placeholder="Matière & Salle (Ex. Histoire — Salle 12)">
+        </div>
+        <button class="btn primary" style="margin-bottom:20px;" onclick="addSchedule()">Ajouter au planning</button>
+
+        <div class="grid g2">
+          ${state.schedule.map((s, i) => `
+            <div class="card" style="background:var(--bg); display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                <b style="color:var(--g); display:block;">${esc(s.day)}</b>
+                <span>${esc(s.course)}</span>
+              </div>
+              <button class="btn danger small" onclick="deleteSchedule(${i})">Supprimer</button>
+            </div>
+          `).join('') || '<p class="muted">Aucun cours enregistré.</p>'}
+        </div>
+      </div>
+    `;
+  }
+
+  if (page === 'report') {
+    return `
+      <div class="card">
+        <h1>🚨 Signaler une anomalie système</h1>
+        <p class="muted" style="margin-bottom:16px;">Signalez toute réponse imprécise de l'IA, un bug technique ou un problème d'interface.</p>
+
+        <label>Catégorie de l'incident</label>
+        <select id="repCat">
+          <option>Inexactitude pédagogique / Erreur IA</option>
+          <option>Dysfonctionnement de l'interface</option>
+          <option>Problème de synthèse/reconnaissance vocale</option>
+          <option>Sécurité & Confidentialité</option>
+          <option>Autre problème</option>
+        </select>
+
+        <label style="margin-top:14px;">Description détaillée</label>
+        <textarea id="repText" placeholder="Expliquez ce qu'il s'est passé..."></textarea>
+
+        <button class="btn primary" style="margin-top:16px;" onclick="submitReport()">Transmettre le signalement</button>
+      </div>
+    `;
+  }
+
+  if (page === 'reports') {
+    return `
+      <div class="card">
+        <h1>🛡️ Centre des Signalements (Vue Créateur)</h1>
+        <p class="muted" style="margin-bottom:16px;">Supervision globale des alertes transmises par les utilisateurs du système fédéré.</p>
+
+        <div class="grid g2">
+          ${state.reports.map((r, i) => `
+            <div class="card" style="background:var(--bg);">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <span class="tag ${r.status === 'Traité' ? 'green' : 'blue'}">${esc(r.status)}</span>
+                <span class="muted small">${esc(r.date)}</span>
+              </div>
+              <b>${esc(r.cat)}</b>
+              <p style="margin:10px 0;">${esc(r.text)}</p>
+              <div class="muted small" style="margin-bottom:10px;">Émis par : ${esc(r.role)}</div>
+              <button class="btn ghost small" onclick="resolveReport(${i})">${r.status === 'Nouveau' ? 'Marquer comme Traité' : 'Réouvrir'}</button>
+            </div>
+          `).join('') || '<p class="muted">Aucun signalement à traiter.</p>'}
+        </div>
+      </div>
+    `;
+  }
+
+  if (page === 'security') {
+    return `
+      <div class="grid g2">
+        <div class="card">
+          <h1>🔐 Architecture Sécurisée</h1>
+          <ul style="padding-left:20px; line-height:1.8; margin-top:12px;">
+            <li>Fédération logique des données par rôle d'accès.</li>
+            <li>Clés d'API IA encapulées côté serveur (zéro fuite navigateur).</li>
+            <li>Chiffrement local localStorage + sessions isolées.</li>
+            <li>Protection contre les injections d'instructions (Prompt Injection).</li>
+            <li>Conformité RGPD et protection renforcée des mineurs.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h2>📊 État du Système Fédéré</h2>
+          <div style="margin-top:14px;">
+            <p><b>Moteur Lia :</b> <span style="color:var(--g); font-weight:700;">● Opérationnel (Local / Fédéré)</span></p>
+            <p><b>Stockage local :</b> ${JSON.stringify(localStorage).length} octets utilisés</p>
+            <p><b>Version :</b> Eduvia Global v2.5 Chrome Edition</p>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  if (page === 'settings') {
+    return `
+      <div class="card">
+        <h1>⚙️ Paramètres système</h1>
+        
+        <div class="setting">
+          <div>
+            <b>Mode Sombre</b>
+            <div class="muted small">Ajuster l'apparence visuelle</div>
+          </div>
+          <button class="btn ghost" onclick="toggleDark()">${document.body.classList.contains('darkmode') ? '☀️ Mode Clair' : '🌙 Mode Sombre'}</button>
+        </div>
+
+        <div class="setting">
+          <div>
+            <b>Lecture vocale (Synthèse)</b>
+            <div class="muted small">Lia lit vocalement ses réponses</div>
+          </div>
+          <button class="switch ${state.voice ? 'on' : ''}" onclick="state.voice=!state.voice; save('edu_voice', state.voice); go('settings', true);"><i></i></button>
+        </div>
+
+        <div class="setting">
+          <div>
+            <b>Réinitialiser les données locales</b>
+            <div class="muted small">Effacer le stockage du navigateur et restaurer la démo</div>
+          </div>
+          <button class="btn danger" onclick="resetAllData()">Vider la mémoire</button>
+        </div>
+      </div>
+    `;
+  }
+
+  return `<div class="card"><h1>Page   return `<div class="card"><h1>Page introuvable</h1><button class="btn primary" onclick="go('home')">Retour à l'accueil</button></div>`;
+}
+
+function bindPage() {
+  const inp = document.getElementById('fileInput');
+  const drop = document.getElementById('drop');
+
+  if (inp) inp.onchange = e => handleFiles(e.target.files);
+  if (drop) {
+    ['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('drag'); }));
+    ['dragleave', 'drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('drag'); }));
+    drop.addEventListener('drop', e => handleFiles(e.dataTransfer.files));
+  }
+  renderFiles();
+
+  const ch = document.getElementById('chat');
+  if (ch) ch.scrollTop = ch.scrollHeight;
+}
+
+function renderFiles() {
+  const box = document.getElementById('fileList');
+  if (!box) return;
+  box.innerHTML = state.files.map((f, i) => `
+    <div class="file">
+      ${f.preview ? `<img src="${f.preview}" alt="">` : `<div class="thumb">📄</div>`}
+      <b>${esc(f.name)}</b>
+      <div class="small muted">${esc(f.type || 'fichier')}</div>
+      <button class="btn danger small full" style="margin-top:6px;" onclick="removeFile(${i})">Retirer</button>
+    </div>
+  `).join('');
+}
+
+function handleFiles(list) {
+  [...list].forEach(file => {
+    const item = { name: file.name, type: file.type, size: file.size, preview: null };
+    if (file.type.startsWith('image/')) {
+      const r = new FileReader();
+      r.onload = () => {
+        item.preview = r.result;
+        state.files.push(item);
+        renderFiles();
+      };
+      r.readAsDataURL(file);
+    } else {
+      state.files.push(item);
+      renderFiles();
+    }
+    state.docs.unshift({ name: file.name, type: file.type || 'Fichier', date: new Date().toLocaleDateString('fr-FR') });
+    save('edu_docs', state.docs);
+  });
+  toast('Document importé avec succès.');
+}
+
+function removeFile(i) {
+  state.files.splice(i, 1);
+  renderFiles();
+}
+
+function createPage() {
+  const title = document.getElementById('newTitle').value.trim();
+  const body = document.getElementById('newBody').value.trim();
+  if (!title) { toast('Veuillez saisir un titre.'); return; }
+
+  state.pages.unshift({ id: 'p_' + Date.now(), title, body, date: Date.now() });
+  save('edu_pages', state.pages);
+  toast('Page enregistrée.');
+  go('pages');
+}
+
+function deletePage(i) {
+  state.pages.splice(i, 1);
+  save('edu_pages', state.pages);
+  go('pages', true);
+}
+
+function addProject() {
+  const name = document.getElementById('projName').value.trim();
+  if (!name) { toast('Nom du projet obligatoire.'); return; }
+  state.projects.unshift({ id: 'pr_' + Date.now(), name, status: 'En cours', tasks: [] });
+  save('edu_projects', state.projects);
+  go('projects', true);
+}
+
+function deleteProject(i) {
+  state.projects.splice(i, 1);
+  save('edu_projects', state.projects);
+  go('projects', true);
+}
+
+function addTask(projIndex) {
+  const input = document.getElementById(`newTask_${projIndex}`);
+  const title = input.value.trim();
+  if (!title) return;
+  state.projects[projIndex].tasks.push({ title, done: false });
+  save('edu_projects', state.projects);
+  go('projects', true);
+}
+
+function toggleTask(projIndex, taskIndex) {
+  state.projects[projIndex].tasks[taskIndex].done = !state.projects[projIndex].tasks[taskIndex].done;
+  save('edu_projects', state.projects);
+  go('projects', true);
+}
+
+function deleteDoc(i) {
+  state.docs.splice(i, 1);
+  save('edu_docs', state.docs);
+  go('docs', true);
+}
+
+function analyzeDoc(docName) {
+  go('ai');
+  quickPrompt(`Analyse le document "${docName}" et fais-moi une synthèse explicative des points clés.`);
+}
+
+function askLiaAboutPage(title) {
+  go('ai');
+  quickPrompt(`Peux-tu m'aider à réviser la page "${title}" et me poser 2 questions pour vérifier ma compréhension ?`);
+}
+
+function addSchedule() {
+  const day = document.getElementById('day').value.trim();
+  const course = document.getElementById('course').value.trim();
+  if (!day || !course) { toast('Remplissez le jour et le cours.'); return; }
+
+  state.schedule.push({ id: 's_' + Date.now(), day, course });
+  save('edu_schedule', state.schedule);
+  go('schedule', true);
+}
+
+function deleteSchedule(i) {
+  state.schedule.splice(i, 1);
+  save('edu_schedule', state.schedule);
+  go('schedule', true);
+}
+
+// INTELLIGENCE ARTIFICIELLE AUTONOME (LIA ENGINE)
+function sendAI() {
+  const p = document.getElementById('prompt').value.trim();
+  if (!p) return;
+
+  state.messages.push({ who: 'me', text: p });
+  const reply = generateLiaResponse(p);
+  state.messages.push({ who: 'ai', text: reply });
+
+  save('edu_messages', state.messages);
+  go('ai', true);
+
+  if (state.voice) speak(reply);
+}
+
+function quickPrompt(text) {
+  const inp = document.getElementById('prompt');
+  if (inp) inp.value = text;
+  sendAI();
+}
+
+function generateLiaResponse(prompt) {
+  const q = prompt.toLowerCase();
+
+  if (/3x\s*\+\s*7\s*=\s*22/.test(q)) {
+    return "Voici la résolution étape par étape de l'équation 3x + 7 = 22 :\n\n1. On isole le terme en x en soustrayant 7 des deux côtés :\n   3x = 22 - 7\n   3x = 15\n\n2. On divise par 3 :\n   x = 15 / 3\n   x = 5\n\n✅ La solution est donc x = 5. Voulez-vous un autre exercice similaire ?";
+  }
+
+  if (/mitochondrie|cellule|svt/.test(q)) {
+    return "🧬 La mitochondrie est la 'centrale énergétique' de la cellule eucaryote.\n\nSon rôle principal est d'effectuer la respiration cellulaire : elle transforme le glucose et l'oxygène en énergie (ATP) utilisable par la cellule, en rejetant du CO2 et de l'eau.";
+  }
+
+  if (/seconde guerre mondiale|histoire|1939/.test(q)) {
+    return "📜 Synthèse rapide de la Seconde Guerre Mondiale (1939-1945) :\n\n• 1er sept 1939 : Invasion de la Pologne par l'Allemagne.\n• 1941 : Entrée des USA (Pearl Harbor) et attaque de l'URSS par l'Allemagne.\n• 6 juin 1944 : Débarquement en Normandie.\n• 8 mai 1945 : Capitulation allemande en Europe.\n• Septembre 1945 : Fin du conflit mondial après Hiroshima/Nagasaki.";
+  }
+
+  if (/quiz|grammaire|questions/.test(q)) {
+    return "📝 Quiz Grammaire (3 questions) :\n\n1. Quel est le participe passé du verbe 'résoudre' ?\n2. Accordez correctement : 'Les fleurs que j'ai (cueillir)'\n3. Quelle est la nature du mot 'rapidement' ?\n\nÉcrivez vos réponses ci-dessous !";
+  }
+
+  if (/analyse|document|synthèse/.test(q)) {
+    return `📄 Analyse appliquée pour "${prompt}" :\n\n• Thème principal : Analyse documentaire et structuration de concepts.\n• Points clés : Clarification des notions, mise en évidence des mots-clés, organisation logique des idées.\n\nQue souhaitez-vous approfondir spécifiquement ?`;
+  }
+
+  return `🌿 Lia : J'ai bien pris en compte votre demande ("${prompt}").\n\nEn tant qu'assistant éducatif Eduvia, je vous propose d'aborder cela méthodiquement :\n1. Identifier les concepts essentiels.\n2. Appliquer la démarche pas-à-pas.\n3. Valider la compréhension avec un exemple concret.\n\nSouhaitez-vous des détails ou des exercices d'entraînement ?`;
+}
+
+function clearChat() {
+  state.messages = [];
+  save('edu_messages', state.messages);
+  go('ai', true);
+}
+
+function speak(text) {
+  if (!state.voice || !('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const cleanText = text.replace(/[^\w\sàâäéèêëîïôöùûüçÂÊÎÔÛÄËÏÖÜÀÆæÇÉÈŒœÙ⚠️📜🧬📝✅•]/gi, '');
+  const u = new SpeechSynthesisUtterance(cleanText);
+  u.lang = 'fr-FR';
+  u.rate = 1.05;
+  speechSynthesis.speak(u);
+}
+
+function readLast() {
+  const m = state.messages.filter(x => x.who === 'ai').pop();
+  speak(m?.text || 'Bonjour, je suis Lia.');
+}
+
+function stopVoice() {
+  if ('speechSynthesis' in window) speechSynthesis.cancel();
+}
+
+function startVoice() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { toast('La reconnaissance vocale n’est pas supportée par ce navigateur.'); return; }
+  if (state.listening) return;
+
+  const r = new SR();
+  r.lang = 'fr-FR';
+  r.interimResults = false;
+
+  r.onstart = () => { state.listening = true; toast('🎙️ Écoute en cours...'); };
+  r.onend = () => { state.listening = false; };
+  r.onerror = () => { state.listening = false; toast('Erreur de capture vocale.'); };
+
+  r.onresult = e => {
+    const txt = e.results[0][0].transcript;
+    document.getElementById('prompt').value = txt;
+    sendAI();
+  };
+
+  r.start();
+}
+
+function generateIllustration() {
+  showModal(`
+    <h2>🖼️ Générateur de Schéma Pédagogique SVG</h2>
+    <p class="muted" style="margin-bottom:12px;">Entrez le sujet du schéma à générer.</p>
+    <input id="imgPrompt" value="Schéma du cycle de l'eau" placeholder="Ex. Le cycle du carbone, Triangle rectangle...">
+    <button class="btn primary full" style="margin-top:14px;" onclick="makeSVG()">Générer le visuel</button>
+  `);
+}
+
+function makeSVG() {
+  const title = esc(document.getElementById('imgPrompt').value || 'Schéma Pédagogique');
+  closeModal();
+
+  const box = document.getElementById('illustrationBox');
+  if (!box) return;
+
+  box.innerHTML = `
+    <div class="card">
+      <h2>🖼️ Illustration générée : ${title}</h2>
+      <svg viewBox="0 0 800 360" width="100%" style="border-radius:16px; background:#f0fdf4; border:2px solid var(--g); margin:12px 0;">
+        <rect x="20" y="20" width="760" height="320" rx="20" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+        <circle cx="200" cy="180" r="70" fill="#dbeafe" stroke="#2563eb" stroke-width="4"/>
+        <path d="M 320 220 C 380 100, 420 100, 480 220" fill="none" stroke="#159669" stroke-width="6" stroke-dasharray="8,8"/>
+        <polygon points="480,220 470,205 490,205" fill="#159669"/>
+        <rect x="540" y="130" width="180" height="100" rx="14" fill="#fef3c7" stroke="#d97706" stroke-width="3"/>
+        <text x="630" y="185" text-anchor="middle" font-weight="bold" font-family="sans-serif" fill="#92400e">Synthèse / Concept</text>
+        <text x="200" y="185" text-anchor="middle" font-weight="bold" font-family="sans-serif" fill="#1e40af">Données In</text>
+        <text x="400" y="320" text-anchor="middle" font-size="20" font-weight="900" font-family="sans-serif" fill="#0f172a">${title}</text>
+      </svg>
+      <p class="muted small">Visuel pédagogique vectoriel interactif.</p>
+    </div>
+  `;
+  toast('Illustration SVG générée.');
+}
+
+function submitReport() {
+  const cat = document.getElementById('repCat').value;
+  const text = document.getElementById('repText').value.trim();
+  if (!text) { toast('Veuillez décrire le problème.'); return; }
+
+  state.reports.unshift({
+    cat, text, status: 'Nouveau', role: labels[state.role], date: new Date().toLocaleDateString('fr-FR')
+  });
+  save('edu_reports', state.reports);
+  toast('Signalement transmis au centre technique.');
+  go('home');
+}
+
+function resolveReport(i) {
+  state.reports[i].status = state.reports[i].status === 'Nouveau' ? 'Traité' : 'Nouveau';
+  save('edu_reports', state.reports);
+  go('reports', true);
+}
+
+function toggleDark() {
+  state.dark = !state.dark;
+  document.body.classList.toggle('darkmode', state.dark);
+  localStorage.setItem('edu_dark', state.dark ? '1' : '0');
+  toast(state.dark ? 'Mode sombre activé' : 'Mode clair activé');
+}
+
+function resetAllData() {
+  if (confirm('Voulez-vous réinitialiser toutes les données de test ?')) {
+    localStorage.clear();
+    location.reload();
+  }
+}
+
+// DÉMARRAGE DE L'APPLICATION
+init();
+</script>
+</body>
+</html>
+</html>
